@@ -1,15 +1,33 @@
 import { Flex, Heading, Button, Box, Input } from "@chakra-ui/react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
+import { useEffect, useState } from "react";
+import api from "../../services/api";
 
-export default function ShowCellphones() {
+export default function ShowCellphones({ onEdit }) {
+  const [cellphones, setCellphones] = useState([]);
+  useEffect(() => {
+    api.get("phones?populate=*").then((r) => {
+      setCellphones(r.data.data);
+    });
+  }, []);
+
+  function handleDelete(id) {
+    if (confirm("Realmente deseja excluir este celular?") == true) {
+      api.delete(`phones/${id}`).then((r) => {
+        api.get("phones?populate=*").then((r) => {
+          setCellphones(r.data.data);
+        });
+      });
+    }
+  }
   return (
     <>
       <Heading marginBottom={"30px"} color={"#6D676E"} size={"lg"}>
         Celulares Cadastrados
       </Heading>
 
-      {[1, 2, 3, 4, 5].map((item, i) => {
+      {cellphones.map((item, i) => {
         return (
           <Flex
             key={i}
@@ -23,17 +41,27 @@ export default function ShowCellphones() {
             _hover={{ opacity: 0.7 }}
             marginBottom="2px"
           >
-            <Flex>
-              <Heading size={"sm"}>Fulano de tal</Heading>
+            <Flex w={"full"} onClick={() => onEdit(item.id)}>
+              <Heading size={"sm"}>
+                {"Modelo: "}
+                {item.attributes.model}
+                {" - Cliente: "}
+                {item.attributes.client.data.attributes.name}
+              </Heading>
             </Flex>
             <Flex>
-              <Box cursor={"pointer"} _hover={{ opacity: 0.5 }}>
+              <Box
+                onClick={() => onEdit(item.id)}
+                cursor={"pointer"}
+                _hover={{ opacity: 0.5 }}
+              >
                 <FaRegEdit color="#0c004e" size={30} />
               </Box>
               <Box
                 marginX={"10px"}
                 cursor={"pointer"}
                 _hover={{ opacity: 0.5 }}
+                onClick={() => handleDelete(item.id)}
               >
                 <MdOutlineDelete color="#ff0000" size={30} />
               </Box>

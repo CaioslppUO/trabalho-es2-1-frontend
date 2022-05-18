@@ -1,6 +1,19 @@
 import { Flex, Heading, Button, Box, Input } from "@chakra-ui/react";
+import api from "../../services/api";
+import { useState, useEffect } from "react";
 
-export default function EditCellphone() {
+export default function EditCellphone({ onEdit, onCancel, cellphoneId }) {
+  const [modelo, setModelo] = useState("");
+  // const [clientId, setClientName] = useState([]);
+  const [selectedClient, setSelectedClient] = useState("");
+
+  useEffect(() => {
+    api.get(`phones/${cellphoneId}?populate=*`).then((r) => {
+      console.log(r.data);
+      setModelo(r.data.data.attributes.model);
+      setSelectedClient(r.data.data.attributes.client.data.attributes.name);
+    });
+  }, [cellphoneId]);
   return (
     <>
       <Heading marginBottom={"30px"} color={"#6D676E"} size={"lg"}>
@@ -11,19 +24,33 @@ export default function EditCellphone() {
         <Heading marginBottom={"10px"} color={"#6D676E"} size={"sm"}>
           Modelo Celular
         </Heading>
-        <Input disabled maxW="700px" placeholder="Modelo Celular" />
+        <Input
+          value={modelo}
+          disabled
+          maxW="700px"
+          placeholder="Modelo Celular"
+        />
       </Box>
 
       <Box marginBottom={"15px"}>
         <Heading marginBottom={"10px"} color={"#6D676E"} size={"sm"}>
           Nome Cliente
         </Heading>
-        <Input disabled maxW="700px" placeholder="Nome do cliente" />
+        <Input
+          value={selectedClient}
+          disabled
+          maxW="700px"
+          placeholder="Nome do cliente"
+        />
       </Box>
 
       <Flex gap="30px" marginTop="30px">
-        <Button colorScheme={"blackAlpha"}>Cancelar</Button>
-        <Button colorScheme={"whatsapp"}>Editar</Button>
+        <Button onClick={onCancel} colorScheme={"blackAlpha"}>
+          Cancelar
+        </Button>
+        <Button onClick={() => onEdit(cellphoneId)} colorScheme={"whatsapp"}>
+          Editar
+        </Button>
       </Flex>
     </>
   );

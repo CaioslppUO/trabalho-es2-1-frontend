@@ -1,5 +1,6 @@
-import { Flex, Heading, Button, Box, Input } from "@chakra-ui/react";
+import { Flex, Heading, Button, CircularProgress } from "@chakra-ui/react";
 import { MdPermDeviceInformation } from "react-icons/md";
+import { Toaster } from "react-hot-toast";
 
 import { useState } from "react";
 import ClientRegistry from "../Components/client/ClientRegistry";
@@ -13,9 +14,22 @@ import CellphonesDetails from "../Components/cellphone/CellphoneDetails";
 import EditCellphones from "../Components/cellphone/EditCellphone";
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const [focusId, setFocusId] = useState("");
+
+  if (loading) {
+    return (
+      <Flex w="100vw" h="100vh" alignItems={"center"} justifyContent="center">
+        <CircularProgress isIndeterminate color="green.300" />
+      </Flex>
+    );
+  }
   return (
     <Flex w={"100vw"}>
+      <div>
+        <Toaster />
+      </div>
       <Flex
         flexDirection={"column"}
         h="100vh"
@@ -97,15 +111,67 @@ export default function Home() {
         </Flex>
       </Flex>
       <Flex padding={"15px"} flexDirection={"column"} w="100%">
-        {activeTab === 0 && <ClientRegistry />}
-        {activeTab === 1 && <ShowClients />}
-        {activeTab === 2 && <ClientDetails />}
-        {activeTab === 3 && <EditClient />}
+        {activeTab === 0 && (
+          <ClientRegistry onRegistry={() => setActiveTab(-1)} />
+        )}
+        {activeTab === 1 && (
+          <ShowClients
+            onEditClient={(id) => {
+              setFocusId(id);
+              setActiveTab(3); //editClient
+            }}
+            onSelectClient={(id) => {
+              setFocusId(id);
+              setActiveTab(2);
+            }}
+          />
+        )}
+        {activeTab === 2 && (
+          <ClientDetails
+            onCancel={() => setActiveTab(-1)}
+            onEdit={(id) => {
+              setFocusId(id);
+              setActiveTab(3);
+            }}
+            clientId={focusId}
+          />
+        )}
+        {activeTab === 3 && (
+          <EditClient
+            onCancel={() => setActiveTab(-1)}
+            clientId={focusId}
+            onUpdate={() => setActiveTab(-1)}
+          />
+        )}
 
-        {activeTab === 4 && <CellphonesRegistry />}
-        {activeTab === 5 && <ShowCellphones />}
-        {activeTab === 6 && <CellphonesDetails />}
-        {activeTab === 7 && <EditCellphones />}
+        {activeTab === 4 && (
+          <CellphonesRegistry onRegistry={() => setActiveTab(-1)} />
+        )}
+        {activeTab === 5 && (
+          <ShowCellphones
+            onEdit={(id) => {
+              setFocusId(id);
+              setActiveTab(6);
+            }}
+          />
+        )}
+        {activeTab === 6 && (
+          <CellphonesDetails
+            onEdit={(id) => {
+              setFocusId(id);
+              setActiveTab(7);
+            }}
+            cellphoneId={focusId}
+            onCancel={() => setActiveTab(-1)}
+          />
+        )}
+        {activeTab === 7 && (
+          <EditCellphones
+            onEdit={() => setActiveTab(-1)}
+            onCancel={() => setActiveTab(-1)}
+            cellphoneId={focusId}
+          />
+        )}
       </Flex>
     </Flex>
   );
