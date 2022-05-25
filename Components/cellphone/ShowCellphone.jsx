@@ -45,8 +45,6 @@ export default function ShowCellphones({ onEdit }) {
               <Heading size={"sm"}>
                 {"Modelo: "}
                 {item.attributes.model}
-                {" - Cliente: "}
-                {item.attributes.client.data.attributes.name}
               </Heading>
             </Flex>
             <Flex>
@@ -57,14 +55,14 @@ export default function ShowCellphones({ onEdit }) {
               >
                 <FaRegEdit color="#0c004e" size={30} />
               </Box>
-              <Box
+              {/* <Box
                 marginX={"10px"}
                 cursor={"pointer"}
                 _hover={{ opacity: 0.5 }}
                 onClick={() => handleDelete(item.id)}
               >
                 <MdOutlineDelete color="#ff0000" size={30} />
-              </Box>
+              </Box> */}
             </Flex>
           </Flex>
         );

@@ -4,20 +4,23 @@ import { MdOutlineDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 
-export default function ShowClients({ onEditClient, onSelectClient }) {
-  const [clients, setClients] = useState([]);
+export default function ShowServiceOrders({ onEdit, onSelectServiceOrder }) {
+  const [serviceOrders, setServiceOrders] = useState([]);
 
   useEffect(() => {
-    api.get("clients?populate=*").then((r) => {
-      setClients(r.data.data);
-    });
+    api
+      .get("service-orders?populate=*&filters[canceled][$eq]=false")
+      .then((r) => {
+        setServiceOrders(r.data.data);
+        console.log(r.data.data);
+      });
   }, []);
 
   function handleDelete(id) {
-    if (confirm("Realmente deseja excluir este cliente?") == true) {
-      api.delete(`clients/${id}`).then((r) => {
-        api.get("clients?populate=*").then((r) => {
-          setClients(r.data.data);
+    if (confirm("Realmente deseja excluir este ServiceOrdere?") == true) {
+      api.delete(`ServiceOrders/${id}`).then((r) => {
+        api.get("ServiceOrders?populate=*").then((r) => {
+          setServiceOrders(r.data.data);
         });
       });
     }
@@ -25,10 +28,10 @@ export default function ShowClients({ onEditClient, onSelectClient }) {
   return (
     <>
       <Heading marginBottom={"30px"} color={"#6D676E"} size={"lg"}>
-        Clientes Cadastrados
+        Ordens de Serviço Cadastrados
       </Heading>
 
-      {clients.map((item, i) => {
+      {serviceOrders.map((item, i) => {
         return (
           <Flex
             key={i}
@@ -42,12 +45,21 @@ export default function ShowClients({ onEditClient, onSelectClient }) {
             _hover={{ opacity: 0.7 }}
             marginBottom="2px"
           >
-            <Flex onClick={() => onSelectClient(item.id)} w="full">
-              <Heading size={"sm"}>{item.attributes.name}</Heading>
+            <Flex
+              onClick={() => {
+                onSelectServiceOrder(item.id);
+              }}
+              w="full"
+            >
+              <Heading size={"sm"}>
+                {item.attributes.client.data.attributes.name}
+                {" - "}
+                {item.attributes.phone.data.attributes.model}
+              </Heading>
             </Flex>
             <Flex>
               <Box
-                onClick={() => onEditClient(item.id)}
+                onClick={() => onEdit(item.id)}
                 cursor={"pointer"}
                 _hover={{ opacity: 0.5 }}
               >

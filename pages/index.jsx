@@ -12,10 +12,15 @@ import CellphonesRegistry from "../Components/cellphone/CellphoneRegistry";
 import ShowCellphones from "../Components/cellphone/ShowCellphone";
 import CellphonesDetails from "../Components/cellphone/CellphoneDetails";
 import EditCellphones from "../Components/cellphone/EditCellphone";
+import ServiceOrderRegistry from "../Components/ServiceOrder/ServiceOrderRegistry";
+import ShowServiceOrders from "../Components/ServiceOrder/ShowServiceOrders";
+import Service from "../Components/ServiceOrder/ShowServiceOrders";
+import ServiceOrderDetails from "../Components/ServiceOrder/ServiceOrderDetails";
+import EditServiceOrder from "../Components/ServiceOrder/EditServiceOrder";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(-1);
   const [focusId, setFocusId] = useState("");
 
   if (loading) {
@@ -41,7 +46,6 @@ export default function Home() {
           alignItems="center"
           justifyContent={"center"}
           height="20%"
-          // border={"1px solid red"}
           w="100%"
         >
           <MdPermDeviceInformation size={40} color="#6D676E" />
@@ -108,6 +112,36 @@ export default function Home() {
           >
             Ver Todos
           </Button>
+
+          <Heading
+            color={"#6d676ea9"}
+            margin={"10px"}
+            size="md"
+            fontWeight={"bold"}
+            marginTop="20px"
+          >
+            Ordens de Serviços
+          </Heading>
+          <Button
+            display={"flex"}
+            justifyContent="flex-start"
+            borderRadius="none"
+            background={"#d4d4d45e"}
+            marginBottom="1px"
+            onClick={() => setActiveTab(13)}
+          >
+            Cadastrar Nova
+          </Button>
+          <Button
+            display={"flex"}
+            justifyContent="flex-start"
+            borderRadius="none"
+            background={"#d4d4d45e"}
+            marginBottom="1px"
+            onClick={() => setActiveTab(14)}
+          >
+            Ver Todas
+          </Button>
         </Flex>
       </Flex>
       <Flex padding={"15px"} flexDirection={"column"} w="100%">
@@ -170,6 +204,39 @@ export default function Home() {
             onEdit={() => setActiveTab(-1)}
             onCancel={() => setActiveTab(-1)}
             cellphoneId={focusId}
+          />
+        )}
+
+        {activeTab === 13 && (
+          <ServiceOrderRegistry onRegistry={() => setActiveTab(-1)} />
+        )}
+        {activeTab === 14 && (
+          <ShowServiceOrders
+            onEdit={(id) => {
+              setFocusId(id);
+              setActiveTab(16);
+            }}
+            onSelectServiceOrder={(id) => {
+              setFocusId(id);
+              setActiveTab(15);
+            }}
+          />
+        )}
+        {activeTab === 15 && (
+          <ServiceOrderDetails
+            onEdit={(id) => {
+              setFocusId(id);
+              setActiveTab(7);
+            }}
+            serviceOrderId={focusId}
+            onCancel={() => setActiveTab(-1)}
+          />
+        )}
+        {activeTab === 16 && (
+          <EditServiceOrder
+            onEdit={() => setActiveTab(-1)}
+            onCancel={() => setActiveTab(-1)}
+            serviceOrderId={focusId}
           />
         )}
       </Flex>
