@@ -12,7 +12,6 @@ export default function ShowServiceOrders({ onEdit, onSelectServiceOrder }) {
       .get("service-orders?populate=*&filters[canceled][$eq]=false")
       .then((r) => {
         setServiceOrders(r.data.data);
-        console.log(r.data.data);
       });
   }, []);
 

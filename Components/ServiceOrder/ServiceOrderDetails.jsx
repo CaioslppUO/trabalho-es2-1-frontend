@@ -10,9 +10,7 @@ export default function ServiceOrderDetails({
   const [serviceOrder, setServiceOrder] = useState({});
 
   useEffect(() => {
-    console.log("AA", serviceOrderId);
     api.get(`service-orders/${serviceOrderId}?populate=*`).then((r) => {
-      console.log(r.data.data);
       setServiceOrder(r.data.data);
     });
   }, [serviceOrderId]);
@@ -29,7 +27,10 @@ export default function ServiceOrderDetails({
               Nome Cliente
             </Heading>
             <Input
-              value={serviceOrder.attributes.client.data.attributes.name}
+              value={
+                serviceOrder.attributes.client.data.attributes.name ||
+                "undefined"
+              }
               disabled
               maxW="700px"
               placeholder="Nome do ServiceOrdere"
@@ -41,7 +42,10 @@ export default function ServiceOrderDetails({
               CPF Cliente
             </Heading>
             <Input
-              value={serviceOrder.attributes.client.data.attributes.cpf}
+              value={
+                serviceOrder.attributes.client.data.attributes.cpf ||
+                "undefined"
+              }
               disabled
               maxW="700px"
               placeholder="Nome do ServiceOrdere"
@@ -53,7 +57,10 @@ export default function ServiceOrderDetails({
               Email Cliente
             </Heading>
             <Input
-              value={serviceOrder.attributes.client.data.attributes.email}
+              value={
+                serviceOrder.attributes.client.data.attributes.email ||
+                "undefined"
+              }
               disabled
               maxW="700px"
               placeholder="Nome do ServiceOrdere"
@@ -65,7 +72,10 @@ export default function ServiceOrderDetails({
               Modelo de Celular
             </Heading>
             <Input
-              value={serviceOrder.attributes.phone.data.attributes.model}
+              value={
+                serviceOrder.attributes.phone.data.attributes.model ||
+                "undefined"
+              }
               disabled
               maxW="700px"
               placeholder="Nome do ServiceOrdere"

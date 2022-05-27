@@ -208,7 +208,15 @@ export default function Home() {
         )}
 
         {activeTab === 13 && (
-          <ServiceOrderRegistry onRegistry={() => setActiveTab(-1)} />
+          <ServiceOrderRegistry
+            onRegistryClient={() => {
+              setActiveTab(0);
+            }}
+            onCancel={() => {
+              setActiveTab(14);
+            }}
+            onRegistry={() => setActiveTab(14)}
+          />
         )}
         {activeTab === 14 && (
           <ShowServiceOrders
@@ -226,17 +234,18 @@ export default function Home() {
           <ServiceOrderDetails
             onEdit={(id) => {
               setFocusId(id);
-              setActiveTab(7);
+              setActiveTab(16);
             }}
             serviceOrderId={focusId}
-            onCancel={() => setActiveTab(-1)}
+            onCancel={() => setActiveTab(14)}
           />
         )}
         {activeTab === 16 && (
           <EditServiceOrder
-            onEdit={() => setActiveTab(-1)}
-            onCancel={() => setActiveTab(-1)}
+            onEdit={() => setActiveTab(14)}
+            onCancel={() => setActiveTab(14)}
             serviceOrderId={focusId}
+            onUpdate={() => setActiveTab(14)}
           />
         )}
       </Flex>

@@ -9,7 +9,7 @@ export default function EditCellphone({ onEdit, onCancel, cellphoneId }) {
     api.get(`phones/${cellphoneId}?populate=*`).then((r) => {
       console.log(r.data);
       setModelo(r.data.data.attributes.model);
-      setSelectedClient(r.data.data.attributes.client.data.attributes.name);
+      // setSelectedClient(r.data.data.attributes.client.data.attributes.name);
     });
   }, [cellphoneId]);
   return (
