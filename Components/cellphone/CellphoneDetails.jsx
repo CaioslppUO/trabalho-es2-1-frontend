@@ -4,14 +4,12 @@ import { useState, useEffect } from "react";
 
 export default function EditCellphone({ onEdit, onCancel, cellphoneId }) {
   const [modelo, setModelo] = useState("");
-  // const [clientId, setClientName] = useState([]);
-  const [selectedClient, setSelectedClient] = useState("");
 
   useEffect(() => {
     api.get(`phones/${cellphoneId}?populate=*`).then((r) => {
       console.log(r.data);
       setModelo(r.data.data.attributes.model);
-      setSelectedClient(r.data.data.attributes.client.data.attributes.name);
+      // setSelectedClient(r.data.data.attributes.client.data.attributes.name);
     });
   }, [cellphoneId]);
   return (
@@ -29,18 +27,6 @@ export default function EditCellphone({ onEdit, onCancel, cellphoneId }) {
           disabled
           maxW="700px"
           placeholder="Modelo Celular"
-        />
-      </Box>
-
-      <Box marginBottom={"15px"}>
-        <Heading marginBottom={"10px"} color={"#6D676E"} size={"sm"}>
-          Nome Cliente
-        </Heading>
-        <Input
-          value={selectedClient}
-          disabled
-          maxW="700px"
-          placeholder="Nome do cliente"
         />
       </Box>
 
