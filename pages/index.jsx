@@ -8,10 +8,10 @@ import ShowClients from "../Components/client/ShowClients";
 import ClientDetails from "../Components/client/ClientDetails";
 import EditClient from "../Components/client/EditClient";
 
-import ServiceOfferedRegistry from "../Components/ServiceOffered/ServiceOfferedRegistry"
-import ShowServiceOffered from "../Components/ServiceOffered/ShowServiceOffered"
-import ServiceOfferedDetails from "../Components/ServiceOffered/ServiceOfferedDetails"
-import EditServiceOffered from "../Components/ServiceOffered/EditServiceOffered"
+import ServiceOfferedRegistry from "../Components/ServiceOffered/ServiceOfferedRegistry";
+import ShowServiceOffered from "../Components/ServiceOffered/ShowServiceOffered";
+import ServiceOfferedDetails from "../Components/ServiceOffered/ServiceOfferedDetails";
+import EditServiceOffered from "../Components/ServiceOffered/EditServiceOffered";
 
 import CellphonesRegistry from "../Components/cellphone/CellphoneRegistry";
 import ShowCellphones from "../Components/cellphone/ShowCellphone";
@@ -50,11 +50,11 @@ export default function Home() {
           flexDirection={"column"}
           alignItems="center"
           justifyContent={"center"}
-          height="20%"
+          height="10%"
           w="100%"
         >
-          <MdPermDeviceInformation size={40} color="#6D676E" />
-          <Heading marginTop={"10px"} size="sm" color="#6D676E">
+          <MdPermDeviceInformation size={20} color="#6D676E" />
+          <Heading marginTop={"2px"} size="sm" color="#6D676E">
             Sistema de Ordem de Serviços
           </Heading>
         </Flex>
@@ -124,7 +124,7 @@ export default function Home() {
             size="md"
             fontWeight={"bold"}
             marginTop="20px"
-          > 
+          >
             Serviços
           </Heading>
           <Button
@@ -155,7 +155,7 @@ export default function Home() {
             size="md"
             fontWeight={"bold"}
             marginTop="20px"
-          > 
+          >
             Ordens de Serviços
           </Heading>
           <Button
@@ -178,7 +178,6 @@ export default function Home() {
           >
             Ver Todas
           </Button>
-          
         </Flex>
       </Flex>
       <Flex padding={"15px"} flexDirection={"column"} w="100%">
