@@ -8,6 +8,11 @@ import ShowClients from "../Components/client/ShowClients";
 import ClientDetails from "../Components/client/ClientDetails";
 import EditClient from "../Components/client/EditClient";
 
+import ServiceOfferedRegistry from "../Components/ServiceOffered/ServiceOfferedRegistry"
+import ShowServiceOffered from "../Components/ServiceOffered/ShowServiceOffered"
+import ServiceOfferedDetails from "../Components/ServiceOffered/ServiceOfferedDetails"
+import EditServiceOffered from "../Components/ServiceOffered/EditServiceOffered"
+
 import CellphonesRegistry from "../Components/cellphone/CellphoneRegistry";
 import ShowCellphones from "../Components/cellphone/ShowCellphone";
 import CellphonesDetails from "../Components/cellphone/CellphoneDetails";
@@ -20,7 +25,7 @@ import EditServiceOrder from "../Components/ServiceOrder/EditServiceOrder";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState(-1);
+  const [activeTab, setActiveTab] = useState(11);
   const [focusId, setFocusId] = useState("");
 
   if (loading) {
@@ -119,7 +124,38 @@ export default function Home() {
             size="md"
             fontWeight={"bold"}
             marginTop="20px"
+          > 
+            Serviços
+          </Heading>
+          <Button
+            display={"flex"}
+            justifyContent="flex-start"
+            borderRadius="none"
+            background={"#d4d4d45e"}
+            marginBottom="1px"
+            onClick={() => setActiveTab(8)}
           >
+            Cadastrar Novo
+          </Button>
+
+          <Button
+            display={"flex"}
+            justifyContent="flex-start"
+            borderRadius="none"
+            background={"#d4d4d45e"}
+            marginBottom="1px"
+            onClick={() => setActiveTab(9)}
+          >
+            Ver Todos
+          </Button>
+
+          <Heading
+            color={"#6d676ea9"}
+            margin={"10px"}
+            size="md"
+            fontWeight={"bold"}
+            marginTop="20px"
+          > 
             Ordens de Serviços
           </Heading>
           <Button
@@ -142,6 +178,7 @@ export default function Home() {
           >
             Ver Todas
           </Button>
+          
         </Flex>
       </Flex>
       <Flex padding={"15px"} flexDirection={"column"} w="100%">
@@ -204,6 +241,39 @@ export default function Home() {
             onEdit={() => setActiveTab(-1)}
             onCancel={() => setActiveTab(-1)}
             cellphoneId={focusId}
+          />
+        )}
+
+        {activeTab === 8 && (
+          <ServiceOfferedRegistry onRegistry={() => setActiveTab(-1)} />
+        )}
+        {activeTab === 9 && (
+          <ShowServiceOffered
+            onEditServiceOffered={(id) => {
+              setFocusId(id);
+              setActiveTab(11); //editClient
+            }}
+            onSelectServiceOffered={(id) => {
+              setFocusId(id);
+              setActiveTab(10);
+            }}
+          />
+        )}
+        {activeTab === 10 && (
+          <ServiceOfferedDetails
+            onCancel={() => setActiveTab(-1)}
+            onEdit={(id) => {
+              setFocusId(id);
+              setActiveTab(11);
+            }}
+            serviceOfferedId={focusId}
+          />
+        )}
+        {activeTab === 11 && (
+          <EditServiceOffered
+            onCancel={() => setActiveTab(-1)}
+            serviceOfferedId={focusId}
+            onUpdate={() => setActiveTab(-1)}
           />
         )}
 

@@ -74,7 +74,7 @@ export default function ClientRegistry({ onRegistry }) {
           maxW="700px"
           maxLength={11}
           minLength={11}
-          placeholder="Email do cliente"
+          placeholder="CPF do cliente"
         />
       </Box>
 
