@@ -1,7 +1,7 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import { MdPermDeviceInformation } from "react-icons/md";
 import { useAppDispatch } from "../../store/hooks";
-import { ActiveTabsProps, setActiveTab } from "../../store/reducers/app";
+import { ActiveTabsProps, setActiveTab } from "../../store/reducers/appReducer";
 import MenuSection from "./MenuSection";
 
 export default function Menu() {

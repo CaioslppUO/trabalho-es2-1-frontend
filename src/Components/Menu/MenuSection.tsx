@@ -10,9 +10,9 @@ interface MenuSectionProps {
 
 export default function MenuSection({
   registrationAction,
-  registrationText = "Cadastrar Novo/a",
+  registrationText = "Cadastrar Novo",
   seeAllAction,
-  seeAllText = "Ver Todos/as",
+  seeAllText = "Ver Todos",
   sectionTitle,
 }: MenuSectionProps) {
   return (

@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export interface Client {
-  name: string;
-}
+import { ClientsProps } from "../../controllers/ClientsController";
+import { OrdersProps } from "../../controllers/OrdersController";
+import { PhonesProps } from "../../controllers/PhonesController";
+import { ServicesProps } from "../../controllers/ServicesController";
 
 export type ActiveTabsProps =
   | "Home"
@@ -24,17 +24,42 @@ export type ActiveTabsProps =
   | "OrderDetails";
 
 export interface AppState {
-  clients: Array<Client>;
+  clients: Array<ClientsProps>;
+  phones: Array<PhonesProps>;
+  orders: Array<OrdersProps>;
+  services: Array<ServicesProps>;
   isLoading: boolean;
   focusId: string;
   activeTab: ActiveTabsProps;
 }
 
 const initialState: AppState = {
-  clients: [],
   isLoading: false,
   focusId: "",
   activeTab: "Home",
+  orders: [
+    {
+      id: 0,
+    },
+  ],
+  phones: [
+    {
+      id: 0,
+      name: "Nome",
+    },
+  ],
+  services: [
+    {
+      id: 0,
+      price: 2,
+    },
+  ],
+  clients: [
+    {
+      id: 0,
+      name: "nome",
+    },
+  ],
 };
 
 const AppSlice = createSlice({

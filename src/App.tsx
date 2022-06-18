@@ -24,9 +24,11 @@ import { useState } from "react";
 import { useAppSelector } from "./store/hooks";
 
 import Menu from "./Components/Menu";
+import { ListItems } from "./Components/ListItems/ListItems";
 
 export default function Home() {
-  const { isLoading, activeTab } = useAppSelector((s) => s.app);
+  const { isLoading, activeTab, clients, orders, services, phones } =
+    useAppSelector((s) => s.app);
 
   const [focusId, setFocusId] = useState("");
 
@@ -42,6 +44,18 @@ export default function Home() {
     <Flex w={"100vw"}>
       <Menu />
       <Flex padding={"15px"} flexDirection={"column"} w="100%">
+        {activeTab === "ShowAllClients" && (
+          <ListItems title="Clientes Registrados" clients={clients} />
+        )}
+        {activeTab === "ShowAllOrders" && (
+          <ListItems title="Ordens Registrados" orders={orders} />
+        )}
+        {activeTab === "ShowAllPhones" && (
+          <ListItems title="Celulares Registrados" phones={phones} />
+        )}
+        {activeTab === "ShowAllServices" && (
+          <ListItems title="Serviços Registrados" services={services} />
+        )}
         {/*
          {activeTab === 0 && (
       <ClientRegistry onRegistry={() => setActiveTab(-1)} />
