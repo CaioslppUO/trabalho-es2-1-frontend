@@ -1,7 +1,7 @@
 import { Flex, Heading, Button, CircularProgress } from "@chakra-ui/react";
 import { MdPermDeviceInformation } from "react-icons/md";
 
-import { useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 // import ClientRegistry from "./Components/client/ClientRegistry";
 // import ShowClients from "./Components/client/ShowClients";
 // import ClientDetails from "./Components/client/ClientDetails";
@@ -21,16 +21,32 @@ import { useState } from "react";
 // import Service from "./Components/ServiceOrder/ShowServiceOrders";
 // import ServiceOrderDetails from "./Components/ServiceOrder/ServiceOrderDetails";
 // import EditServiceOrder from "./Components/ServiceOrder/EditServiceOrder";
-import { useAppSelector } from "./store/hooks";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
 
 import Menu from "./Components/Menu";
 import { ListItems } from "./Components/ListItems/ListItems";
+import ItemRegistration from "./Components/ItemRegistration/ItemRegistration";
+import {
+  setClients,
+  setLoading,
+  setOrders,
+  setPhones,
+  setServices,
+} from "./store/reducers/appReducer";
+import { ClientsController } from "./controllers/ClientsController";
+import { OrdersController } from "./controllers/OrdersController";
+import { PhonesController } from "./controllers/PhonesController";
+import { ServicesController } from "./controllers/ServicesController";
+import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
 
 export default function Home() {
   const { isLoading, activeTab, clients, orders, services, phones } =
     useAppSelector((s) => s.app);
+  const dispatch = useAppDispatch();
 
-  const [focusId, setFocusId] = useState("");
+  useEffect(() => {
+    initState(dispatch);
+  }, []);
 
   if (isLoading) {
     return (
@@ -39,7 +55,6 @@ export default function Home() {
       </Flex>
     );
   }
-
   return (
     <Flex w={"100vw"}>
       <Menu />
@@ -55,6 +70,18 @@ export default function Home() {
         )}
         {activeTab === "ShowAllServices" && (
           <ListItems title="Serviços Registrados" services={services} />
+        )}
+        {activeTab === "ClientRegistration" && (
+          <ItemRegistration typeItem="Client" />
+        )}
+        {activeTab === "orderRegistration" && (
+          <ItemRegistration typeItem="Order" />
+        )}
+        {activeTab === "PhoneRegistration" && (
+          <ItemRegistration typeItem="Phone" />
+        )}
+        {activeTab === "ServiceRegistration" && (
+          <ItemRegistration typeItem="Service" />
         )}
         {/*
          {activeTab === 0 && (
@@ -197,4 +224,25 @@ export default function Home() {
       </Flex>
     </Flex>
   );
+}
+
+async function initState(dispatch: Dispatch<AnyAction>) {
+  dispatch(setLoading(true));
+  const clientsController = new ClientsController();
+  const clients = await clientsController.fetchClients();
+  dispatch(setClients(clients));
+
+  const ordersController = new OrdersController();
+  const orders = await ordersController.fetchOrders();
+  dispatch(setOrders(orders));
+
+  const phonesController = new PhonesController();
+  const phones = await phonesController.fetchPhones();
+  dispatch(setPhones(phones));
+
+  const servicesController = new ServicesController();
+  const services = await servicesController.fetchServices();
+  dispatch(setServices(services));
+
+  dispatch(setLoading(false));
 }

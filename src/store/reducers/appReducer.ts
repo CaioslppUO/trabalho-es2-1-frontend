@@ -45,19 +45,22 @@ const initialState: AppState = {
   phones: [
     {
       id: 0,
-      name: "Nome",
+      model: "",
     },
   ],
   services: [
     {
       id: 0,
       price: 2,
+      type: "",
     },
   ],
   clients: [
     {
       id: 0,
       name: "nome",
+      cpf: "cpf",
+      email: "email",
     },
   ],
 };
@@ -75,8 +78,28 @@ const AppSlice = createSlice({
     setActiveTab: (state, action: PayloadAction<ActiveTabsProps>) => {
       state.activeTab = action.payload;
     },
+    setClients: (state, action: PayloadAction<ClientsProps[]>) => {
+      state.clients = action.payload;
+    },
+    setPhones: (state, action: PayloadAction<PhonesProps[]>) => {
+      state.phones = action.payload;
+    },
+    setOrders: (state, action: PayloadAction<OrdersProps[]>) => {
+      state.orders = action.payload;
+    },
+    setServices: (state, action: PayloadAction<ServicesProps[]>) => {
+      state.services = action.payload;
+    },
   },
 });
 
 export default AppSlice.reducer;
-export const { setLoading, setFocusId, setActiveTab } = AppSlice.actions;
+export const {
+  setLoading,
+  setFocusId,
+  setActiveTab,
+  setClients,
+  setOrders,
+  setPhones,
+  setServices,
+} = AppSlice.actions;
