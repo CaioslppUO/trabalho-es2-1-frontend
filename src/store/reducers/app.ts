@@ -4,12 +4,24 @@ export interface Client {
   name: string;
 }
 
-type ActiveTabsProps =
+export type ActiveTabsProps =
   | "Home"
   | "ShowAllClients"
   | "ClientRegistration"
   | "ClientEdit"
-  | "ClientDetails";
+  | "ClientDetails"
+  | "ShowAllPhones"
+  | "PhoneRegistration"
+  | "PhoneEdit"
+  | "PhoneDetails"
+  | "ShowAllServices"
+  | "ServiceRegistration"
+  | "ServiceEdit"
+  | "ServiceDetails"
+  | "ShowAllOrders"
+  | "orderRegistration"
+  | "OrderEdit"
+  | "OrderDetails";
 
 export interface AppState {
   clients: Array<Client>;
@@ -42,4 +54,4 @@ const AppSlice = createSlice({
 });
 
 export default AppSlice.reducer;
-export const { setLoading, setFocusId } = AppSlice.actions;
+export const { setLoading, setFocusId, setActiveTab } = AppSlice.actions;
