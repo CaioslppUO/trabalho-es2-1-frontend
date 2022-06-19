@@ -24,13 +24,18 @@ export default function Menu() {
         justifyContent={"center"}
         height="10%"
         w="100%"
+        paddingBottom={"20px"}
       >
         <MdPermDeviceInformation size={20} color="#6D676E" />
         <Heading marginTop={"2px"} size="sm" color="#6D676E">
-          Sistema de Ordem de Serviços
+          Sistema de Gerenciamento e Serviços
         </Heading>
       </Flex>
       <Flex flexDirection={"column"} w="100%">
+        <MenuSection
+          sectionTitle="Home"
+          homeAction={() => ChangeScreen("Home")}
+        />
         <MenuSection
           sectionTitle="Clientes"
           registrationAction={() => ChangeScreen("ClientRegistration")}

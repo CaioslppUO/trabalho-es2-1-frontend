@@ -39,6 +39,7 @@ import { PhonesController } from "./controllers/PhonesController";
 import { ServicesController } from "./controllers/ServicesController";
 import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
 import LoadLists from "./Components/LoadLists/LoadLists";
+import Homepage from "./Components/Home/HomePage";
 
 export default function Home() {
   const { isLoading, activeTab, clients, orders, services, phones } =
@@ -60,6 +61,7 @@ export default function Home() {
     <Flex w={"100vw"}>
       <Menu />
       <Flex padding={"15px"} flexDirection={"column"} w="100%">
+        {activeTab === "Home" && <Homepage />}
         {activeTab === "ShowAllClients" && (
           <ListItems title="Clientes Registrados" clients={clients} />
         )}

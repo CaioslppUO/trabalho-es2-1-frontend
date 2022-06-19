@@ -8,6 +8,8 @@ interface MenuSectionProps {
   sectionTitle: string;
   loadFilesAction?: () => void;
   loadFilesTitle?: string;
+  homeAction?: () => void;
+  homeTitle?: string;
 }
 
 export default function MenuSection({
@@ -18,6 +20,8 @@ export default function MenuSection({
   sectionTitle,
   loadFilesTitle = "Carregar Listas",
   loadFilesAction,
+  homeAction,
+  homeTitle = "Home",
 }: MenuSectionProps) {
   return (
     <>
@@ -67,6 +71,19 @@ export default function MenuSection({
           fontSize={"13px"}
         >
           {loadFilesTitle}
+        </Button>
+      )}
+      {homeAction && (
+        <Button
+          display={"flex"}
+          justifyContent="flex-start"
+          borderRadius="none"
+          background={"#d4d4d45e"}
+          marginBottom="1px"
+          onClick={homeAction}
+          fontSize={"13px"}
+        >
+          {homeTitle}
         </Button>
       )}
     </>
