@@ -15,6 +15,8 @@ export default function Menu() {
       h="100vh"
       w="30vw"
       borderRight={"1px solid #00000039"}
+      overflowY={"scroll"}
+      padding="30px 0px"
     >
       <Flex
         flexDirection={"column"}
@@ -48,6 +50,10 @@ export default function Menu() {
           sectionTitle="Ordens de Serviços"
           registrationAction={() => ChangeScreen("orderRegistration")}
           seeAllAction={() => ChangeScreen("ShowAllOrders")}
+        />
+        <MenuSection
+          sectionTitle="Carregar Listas de Informação"
+          loadFilesAction={() => ChangeScreen("LoadLists")}
         />
       </Flex>
     </Flex>

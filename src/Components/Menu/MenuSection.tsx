@@ -2,10 +2,12 @@ import { Button, Heading } from "@chakra-ui/react";
 
 interface MenuSectionProps {
   registrationText?: string;
-  registrationAction: () => void;
+  registrationAction?: () => void;
   seeAllText?: string;
-  seeAllAction: () => void;
+  seeAllAction?: () => void;
   sectionTitle: string;
+  loadFilesAction?: () => void;
+  loadFilesTitle?: string;
 }
 
 export default function MenuSection({
@@ -14,6 +16,8 @@ export default function MenuSection({
   seeAllAction,
   seeAllText = "Ver Todos",
   sectionTitle,
+  loadFilesTitle = "Carregar Listas",
+  loadFilesAction,
 }: MenuSectionProps) {
   return (
     <>
@@ -22,29 +26,49 @@ export default function MenuSection({
         margin={"10px"}
         size="md"
         fontWeight={"bold"}
+        fontSize={"16px"}
       >
         {sectionTitle}
       </Heading>
-      <Button
-        display={"flex"}
-        justifyContent="flex-start"
-        borderRadius="none"
-        background={"#d4d4d45e"}
-        marginBottom="1px"
-        onClick={registrationAction}
-      >
-        {registrationText}
-      </Button>
-      <Button
-        display={"flex"}
-        justifyContent="flex-start"
-        borderRadius="none"
-        background={"#d4d4d45e"}
-        marginBottom="1px"
-        onClick={seeAllAction}
-      >
-        {seeAllText}
-      </Button>
+      {registrationAction && (
+        <Button
+          display={"flex"}
+          justifyContent="flex-start"
+          borderRadius="none"
+          background={"#d4d4d45e"}
+          marginBottom="1px"
+          onClick={registrationAction}
+          fontSize={"13px"}
+        >
+          {registrationText}
+        </Button>
+      )}
+      {seeAllAction && (
+        <Button
+          display={"flex"}
+          justifyContent="flex-start"
+          borderRadius="none"
+          background={"#d4d4d45e"}
+          marginBottom="1px"
+          onClick={seeAllAction}
+          fontSize={"13px"}
+        >
+          {seeAllText}
+        </Button>
+      )}
+      {loadFilesAction && (
+        <Button
+          display={"flex"}
+          justifyContent="flex-start"
+          borderRadius="none"
+          background={"#d4d4d45e"}
+          marginBottom="1px"
+          onClick={loadFilesAction}
+          fontSize={"13px"}
+        >
+          {loadFilesTitle}
+        </Button>
+      )}
     </>
   );
 }

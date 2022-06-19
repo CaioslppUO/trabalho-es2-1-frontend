@@ -38,6 +38,7 @@ import { OrdersController } from "./controllers/OrdersController";
 import { PhonesController } from "./controllers/PhonesController";
 import { ServicesController } from "./controllers/ServicesController";
 import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
+import LoadLists from "./Components/LoadLists/LoadLists";
 
 export default function Home() {
   const { isLoading, activeTab, clients, orders, services, phones } =
@@ -83,6 +84,7 @@ export default function Home() {
         {activeTab === "ServiceRegistration" && (
           <ItemRegistration typeItem="Service" />
         )}
+        {activeTab === "LoadLists" && <LoadLists />}
         {/*
          {activeTab === 0 && (
       <ClientRegistry onRegistry={() => setActiveTab(-1)} />

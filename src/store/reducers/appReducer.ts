@@ -21,7 +21,8 @@ export type ActiveTabsProps =
   | "ShowAllOrders"
   | "orderRegistration"
   | "OrderEdit"
-  | "OrderDetails";
+  | "OrderDetails"
+  | "LoadLists";
 
 export interface AppState {
   clients: Array<ClientsProps>;
