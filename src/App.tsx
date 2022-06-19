@@ -1,31 +1,16 @@
-import { Flex, Heading, Button, CircularProgress } from "@chakra-ui/react";
-import { MdPermDeviceInformation } from "react-icons/md";
-
-import { Dispatch, useEffect, useState } from "react";
-// import ClientRegistry from "./Components/client/ClientRegistry";
-// import ShowClients from "./Components/client/ShowClients";
-// import ClientDetails from "./Components/client/ClientDetails";
-// import EditClient from "./Components/client/EditClient";
-
-// import ServiceOfferedRegistry from "./Components/ServiceOffered/ServiceOfferedRegistry";
-// import ShowServiceOffered from "./Components/ServiceOffered/ShowServiceOffered";
-// import ServiceOfferedDetails from "./Components/ServiceOffered/ServiceOfferedDetails";
-// import EditServiceOffered from "./Components/ServiceOffered/EditServiceOffered";
-
-// import CellphonesRegistry from "./Components/cellphone/CellphoneRegistry";
-// import ShowCellphones from "./Components/cellphone/ShowCellphone";
-// import CellphonesDetails from "./Components/cellphone/CellphoneDetails";
-// import EditCellphones from "./Components/cellphone/EditCellphone";
-// import ServiceOrderRegistry from "./Components/ServiceOrder/ServiceOrderRegistry";
-// import ShowServiceOrders from "./Components/ServiceOrder/ShowServiceOrders";
-// import Service from "./Components/ServiceOrder/ShowServiceOrders";
-// import ServiceOrderDetails from "./Components/ServiceOrder/ServiceOrderDetails";
-// import EditServiceOrder from "./Components/ServiceOrder/EditServiceOrder";
+import { Flex, CircularProgress } from "@chakra-ui/react";
+import { Dispatch, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-
 import Menu from "./Components/Menu";
 import { ListItems } from "./Components/ListItems/ListItems";
 import ItemRegistration from "./Components/ItemRegistration/ItemRegistration";
+import { ClientsController } from "./controllers/ClientsController";
+import { OrdersController } from "./controllers/OrdersController";
+import { PhonesController } from "./controllers/PhonesController";
+import { ServicesController } from "./controllers/ServicesController";
+import { AnyAction } from "@reduxjs/toolkit";
+import LoadLists from "./Components/LoadLists/LoadLists";
+import Homepage from "./Components/Home/HomePage";
 import {
   setClients,
   setLoading,
@@ -33,13 +18,6 @@ import {
   setPhones,
   setServices,
 } from "./store/reducers/appReducer";
-import { ClientsController } from "./controllers/ClientsController";
-import { OrdersController } from "./controllers/OrdersController";
-import { PhonesController } from "./controllers/PhonesController";
-import { ServicesController } from "./controllers/ServicesController";
-import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
-import LoadLists from "./Components/LoadLists/LoadLists";
-import Homepage from "./Components/Home/HomePage";
 
 export default function Home() {
   const { isLoading, activeTab, clients, orders, services, phones } =
@@ -87,144 +65,6 @@ export default function Home() {
           <ItemRegistration typeItem="Service" />
         )}
         {activeTab === "LoadLists" && <LoadLists />}
-        {/*
-         {activeTab === 0 && (
-      <ClientRegistry onRegistry={() => setActiveTab(-1)} />
-    )}
-   
-    {activeTab === 1 && (
-      <ShowClients
-        onEditClient={(id) => {
-          setFocusId(id);
-          setActiveTab(3); //editClient
-        }}
-        onSelectClient={(id) => {
-          setFocusId(id);
-          setActiveTab(2);
-        }}
-      />
-    )}
-    {activeTab === 2 && (
-      <ClientDetails
-        onCancel={() => setActiveTab(-1)}
-        onEdit={(id) => {
-          setFocusId(id);
-          setActiveTab(3);
-        }}
-        clientId={focusId}
-      />
-    )}
-    {activeTab === 3 && (
-      <EditClient
-        onCancel={() => setActiveTab(-1)}
-        clientId={focusId}
-        onUpdate={() => setActiveTab(-1)}
-      />
-    )}
-
-    {activeTab === 4 && (
-      <CellphonesRegistry onRegistry={() => setActiveTab(-1)} />
-    )}
-    {activeTab === 5 && (
-      <ShowCellphones
-        onEdit={(id) => {
-          setFocusId(id);
-          setActiveTab(6);
-        }}
-      />
-    )}
-    {activeTab === 6 && (
-      <CellphonesDetails
-        onEdit={(id) => {
-          setFocusId(id);
-          setActiveTab(7);
-        }}
-        cellphoneId={focusId}
-        onCancel={() => setActiveTab(-1)}
-      />
-    )}
-    {activeTab === 7 && (
-      <EditCellphones
-        onEdit={() => setActiveTab(-1)}
-        onCancel={() => setActiveTab(-1)}
-        cellphoneId={focusId}
-      />
-    )}
-
-    {activeTab === 8 && (
-      <ServiceOfferedRegistry onRegistry={() => setActiveTab(-1)} />
-    )}
-    {activeTab === 9 && (
-      <ShowServiceOffered
-        onEditServiceOffered={(id) => {
-          setFocusId(id);
-          setActiveTab(11); //editClient
-        }}
-        onSelectServiceOffered={(id) => {
-          setFocusId(id);
-          setActiveTab(10);
-        }}
-      />
-    )}
-    {activeTab === 10 && (
-      <ServiceOfferedDetails
-        onCancel={() => setActiveTab(-1)}
-        onEdit={(id) => {
-          setFocusId(id);
-          setActiveTab(11);
-        }}
-        serviceOfferedId={focusId}
-      />
-    )}
-    {activeTab === 11 && (
-      <EditServiceOffered
-        onCancel={() => setActiveTab(-1)}
-        serviceOfferedId={focusId}
-        onUpdate={() => setActiveTab(-1)}
-      />
-    )}
-
-    {activeTab === 13 && (
-      <ServiceOrderRegistry
-        onRegistryClient={() => {
-          setActiveTab(0);
-        }}
-        onCancel={() => {
-          setActiveTab(14);
-        }}
-        onRegistry={() => setActiveTab(14)}
-      />
-    )}
-    {activeTab === 14 && (
-      <ShowServiceOrders
-        onEdit={(id) => {
-          setFocusId(id);
-          setActiveTab(16);
-        }}
-        onSelectServiceOrder={(id) => {
-          setFocusId(id);
-          setActiveTab(15);
-        }}
-      />
-    )}
-    {activeTab === 15 && (
-      <ServiceOrderDetails
-        onEdit={(id) => {
-          setFocusId(id);
-          setActiveTab(16);
-        }}
-        serviceOrderId={focusId}
-        onCancel={() => setActiveTab(14)}
-      />
-    )}
-    {activeTab === 16 && (
-      <EditServiceOrder
-        onEdit={() => setActiveTab(14)}
-        onCancel={() => setActiveTab(14)}
-        serviceOrderId={focusId}
-        onUpdate={() => setActiveTab(14)}
-      />
-    )} */}
       </Flex>
     </Flex>
   );

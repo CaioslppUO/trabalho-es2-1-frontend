@@ -16,7 +16,7 @@ import {
   ServicesController,
   ServicesProps,
 } from "../../controllers/ServicesController";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   setActiveTab,
   setClients,
@@ -43,6 +43,7 @@ export default function ItemRegistration({ typeItem }: ItemRegistration) {
 
   const toast = useToast();
   const dispatch = useAppDispatch();
+  const { clients, services, phones } = useAppSelector((s) => s.app);
 
   function showRegistryError() {
     toast({
@@ -78,23 +79,22 @@ export default function ItemRegistration({ typeItem }: ItemRegistration) {
   }
 
   async function registryOrder() {
-    const oc = new OrdersController();
-    const newOrder: OrdersProps = {
-      id: -1,
-    };
-    const orders = await oc.RegistryNewOrder(newOrder);
-
-    if (orders !== -1) {
-      dispatch(setOrders(orders));
-      toast({
-        title: "Ordem de Serviços cadastrada!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      showRegistryError();
-    }
+    // const oc = new OrdersController();
+    // const newOrder: OrdersProps = {
+    //   id: -1,
+    // };
+    // const orders = await oc.RegistryNewOrder(newOrder);
+    // if (orders !== -1) {
+    //   dispatch(setOrders(orders));
+    //   toast({
+    //     title: "Ordem de Serviços cadastrada!",
+    //     status: "success",
+    //     duration: 3000,
+    //     isClosable: true,
+    //   });
+    // } else {
+    //   showRegistryError();
+    // }
   }
 
   async function registryPhone() {
@@ -208,19 +208,29 @@ export default function ItemRegistration({ typeItem }: ItemRegistration) {
       {typeItem === "Order" && (
         <>
           <SelectInput
-            label="Serviços"
-            onChange={(e) => console.log(e)}
-            value={["dado1"]}
-            multiple
-            itemsData={["dado1", "dado2", "dado3"]}
-          />
-
-          <SelectInput
             label="Celular"
             onChange={(e) => console.log(e)}
             value={[]}
             multiple={false}
-            itemsData={["dado1", "dado2", "dado3"]}
+            itemsData={phones.map((i) => `ID:${i.id} / ${i.model}`)}
+          />
+
+          <SelectInput
+            label="Cliente"
+            onChange={(e) => console.log(e)}
+            value={[]}
+            multiple={false}
+            itemsData={clients.map((i) => i.name)}
+          />
+
+          <SelectInput
+            label="Serviços"
+            onChange={(e) => console.log(e)}
+            value={[]}
+            multiple
+            itemsData={services.map(
+              (i) => `ID:${i.id} / ${i.type} / R$${i.price}`
+            )}
           />
         </>
       )}

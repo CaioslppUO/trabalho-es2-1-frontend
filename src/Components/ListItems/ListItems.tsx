@@ -67,6 +67,9 @@ export function ListItems({
             return (
               <Container key={i}>
                 <Flex>ID: {item.id}</Flex>
+                <Flex>NOME CLIENTE: {item.name}</Flex>
+                <Flex>CPF CLIENTE: {item.cpf}</Flex>
+                <Flex>PHONE MODEL: {item.phoneModel}</Flex>
               </Container>
             );
           })}

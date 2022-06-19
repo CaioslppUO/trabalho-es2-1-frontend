@@ -2,6 +2,17 @@ import api from "../services/api";
 
 export interface OrdersProps {
   id: number;
+  name: string;
+  email: string;
+  cpf: string;
+  idPhone: number;
+  phoneModel: string;
+  services: [
+    {
+      type: string;
+      price: string;
+    }
+  ];
 }
 
 export class OrdersController {
