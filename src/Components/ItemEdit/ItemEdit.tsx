@@ -30,15 +30,11 @@ import { useToast } from "@chakra-ui/react";
 import SelectInput from "../inputs/SelectInput";
 import TextInput from "../inputs/TextInput";
 
-interface ItemEditProps {
+interface ItemRegistration {
   typeItem: "Phone" | "Client" | "Order" | "Service";
-  operation?: "Edit" | "Registry";
 }
 
-export default function ItemEdit({
-  typeItem,
-  operation = "Registry",
-}: ItemEditProps) {
+export default function ItemRegistration({ typeItem }: ItemRegistration) {
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [price, setPrice] = useState("");
@@ -198,11 +194,10 @@ export default function ItemEdit({
   return (
     <>
       <Heading marginBottom={"30px"} color={"#6D676E"} size={"lg"}>
-        {operation === "Registry" ? "Cadastro" : "Edição"}
-        {typeItem === "Client" && " de Cliente"}
-        {typeItem === "Phone" && " de Celular"}
-        {typeItem === "Order" && "de Ordem de Serviços"}
-        {typeItem === "Service" && " de Serviço"}
+        {typeItem === "Client" && "Cadastro Cliente"}
+        {typeItem === "Phone" && "Cadastro de Celular"}
+        {typeItem === "Order" && "Cadastro Ordem de Serviços"}
+        {typeItem === "Service" && "Cadastro de Serviço"}
       </Heading>
 
       {typeItem === "Client" && (

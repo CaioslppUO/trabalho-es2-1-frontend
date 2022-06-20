@@ -5,14 +5,16 @@ export interface OrdersProps {
   name: string;
   email: string;
   cpf: string;
+  idClient: string;
   idPhone: number;
   phoneModel: string;
-  services: [
-    {
-      type: string;
-      price: string;
-    }
-  ];
+  services?: { type: string; price: string; id: number }[];
+}
+export interface OrderRegistryProps {
+  idClient: number;
+  idPhone: number;
+  services: number[];
+  beginDate: string;
 }
 
 export class OrdersController {
@@ -35,9 +37,10 @@ export class OrdersController {
    * Function that create a new order
    * @param order data to be recorded in the api
    */
-  async RegistryNewOrder(order: OrdersProps) {
+  async RegistryNewOrder(order: OrderRegistryProps) {
+    console.log(order);
     try {
-      await api.post("client", {});
+      await api.post("serviceOrder", order);
     } catch (error) {
       console.log(error);
       return -1;

@@ -70,6 +70,15 @@ export function ListItems({
                 <Flex>NOME CLIENTE: {item.name}</Flex>
                 <Flex>CPF CLIENTE: {item.cpf}</Flex>
                 <Flex>PHONE MODEL: {item.phoneModel}</Flex>
+                {item.services && (
+                  <>
+                    <Flex>SERVIÇOS: </Flex>
+
+                    {item.services.map((w, j) => (
+                      <Flex key={j}>• {w.type}</Flex>
+                    ))}
+                  </>
+                )}
               </Container>
             );
           })}

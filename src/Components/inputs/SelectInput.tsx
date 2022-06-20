@@ -1,11 +1,11 @@
 import { Box, Flex, Heading, Select, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MdOutlineDelete } from "react-icons/md";
 
 interface SelectInputProps {
   label: string;
   value: string[];
-  onChange: (newValue: string | string[]) => void;
+  onChange: (newValue: string[]) => void;
   multiple: boolean;
   itemsData: Array<string>;
 }
@@ -33,7 +33,7 @@ const SelectInput = ({
     }
   }
 
-  useEffect(() => {
+  const init = useCallback(() => {
     const newDb = itemsData.filter((filteredItem) => {
       let flag = false;
       value.forEach((v) => {
@@ -45,8 +45,15 @@ const SelectInput = ({
       return !flag;
     });
     setDb(newDb);
-    setItems(value);
-  }, [itemsData]);
+  }, []);
+
+  useEffect(() => {
+    init();
+  }, [init]);
+
+  // useEffect(() => {
+  //   console.log("AA", value);
+  // }, [value]);
 
   useEffect(() => {
     if (multiple) {

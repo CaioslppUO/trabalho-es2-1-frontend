@@ -28,7 +28,7 @@ export default function Menu() {
       >
         <MdPermDeviceInformation size={20} color="#6D676E" />
         <Heading marginTop={"2px"} size="sm" color="#6D676E">
-          Sistema de Gerenciamento e Serviços
+          Gerenciamento e Serviços
         </Heading>
       </Flex>
       <Flex flexDirection={"column"} w="100%">
