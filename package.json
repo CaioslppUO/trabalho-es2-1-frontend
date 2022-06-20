@@ -1,29 +1,30 @@
 {
-  "name": "sistema-nota-fiscal",
-  "version": "0.1.0",
+  "name": "frontend",
   "private": true,
+  "version": "0.0.0",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start -p $PORT",
-    "lint": "next lint",
-    "heroku-postbuild": "npm run build"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.0.2",
-    "@emotion/react": "^11.9.0",
-    "@emotion/styled": "^11.8.1",
-    "@netlify/plugin-nextjs": "^4.7.0",
+    "@chakra-ui/react": "^2.2.1",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@reduxjs/toolkit": "^1.8.2",
     "axios": "^0.27.2",
-    "framer-motion": "^6.3.3",
-    "next": "12.1.6",
-    "react": "18.1.0",
-    "react-dom": "18.1.0",
+    "framer-motion": "^6",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-hot-toast": "^2.2.0",
-    "react-icons": "^4.3.1"
+    "react-icons": "^4.4.0",
+    "react-redux": "^8.0.2"
   },
   "devDependencies": {
-    "eslint": "8.15.0",
-    "eslint-config-next": "12.1.6"
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^1.3.0",
+    "typescript": "^4.6.3",
+    "vite": "^2.9.9"
   }
 }

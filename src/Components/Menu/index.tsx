@@ -1,0 +1,66 @@
+import { Flex, Heading } from "@chakra-ui/react";
+import { MdPermDeviceInformation } from "react-icons/md";
+import { useAppDispatch } from "../../store/hooks";
+import { ActiveTabsProps, setActiveTab } from "../../store/reducers/appReducer";
+import MenuSection from "./MenuSection";
+
+export default function Menu() {
+  const dispatch = useAppDispatch();
+  function ChangeScreen(value: ActiveTabsProps) {
+    dispatch(setActiveTab(value));
+  }
+  return (
+    <Flex
+      flexDirection={"column"}
+      h="100vh"
+      w="30vw"
+      borderRight={"1px solid #00000039"}
+      overflowY={"scroll"}
+      padding="30px 0px"
+    >
+      <Flex
+        flexDirection={"column"}
+        alignItems="center"
+        justifyContent={"center"}
+        height="10%"
+        w="100%"
+        paddingBottom={"20px"}
+      >
+        <MdPermDeviceInformation size={20} color="#6D676E" />
+        <Heading marginTop={"2px"} size="sm" color="#6D676E">
+          Sistema de Gerenciamento e Serviços
+        </Heading>
+      </Flex>
+      <Flex flexDirection={"column"} w="100%">
+        <MenuSection
+          sectionTitle="Home"
+          homeAction={() => ChangeScreen("Home")}
+        />
+        <MenuSection
+          sectionTitle="Clientes"
+          registrationAction={() => ChangeScreen("ClientRegistration")}
+          seeAllAction={() => ChangeScreen("ShowAllClients")}
+        />
+        <MenuSection
+          sectionTitle="Celulares"
+          registrationAction={() => ChangeScreen("PhoneRegistration")}
+          seeAllAction={() => ChangeScreen("ShowAllPhones")}
+        />
+        <MenuSection
+          sectionTitle="Serviços"
+          registrationAction={() => ChangeScreen("ServiceRegistration")}
+          seeAllAction={() => ChangeScreen("ShowAllServices")}
+        />
+        <MenuSection
+          sectionTitle="Ordens de Serviços"
+          registrationAction={() => ChangeScreen("orderRegistration")}
+          seeAllAction={() => ChangeScreen("ShowAllOrders")}
+        />
+        <MenuSection
+          sectionTitle="Carregar Listas de Informação"
+          loadFilesAction={() => ChangeScreen("LoadLists")}
+        />
+      </Flex>
+    </Flex>
+  );
+}
