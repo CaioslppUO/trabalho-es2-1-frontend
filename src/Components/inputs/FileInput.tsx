@@ -1,9 +1,7 @@
 import { Box, Heading, Input } from "@chakra-ui/react";
-import { HTMLInputTypeAttribute } from "react";
-
 export interface FileInputProps {
   label: string;
-  onChange: (newValue: string) => void;
+  onChange: (newValue: File) => void;
 }
 const FileInput = ({ label, onChange }: FileInputProps) => {
   return (
@@ -13,7 +11,11 @@ const FileInput = ({ label, onChange }: FileInputProps) => {
       </Heading>
       <Input
         type={"file"}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          if (e.target.files && e.target.files.length > 0) {
+            onChange(e.target.files[0]);
+          }
+        }}
         maxW="700px"
         placeholder={label}
       />
