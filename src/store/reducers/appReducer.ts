@@ -4,24 +4,18 @@ import { OrdersProps } from "../../controllers/OrdersController";
 import { PhonesProps } from "../../controllers/PhonesController";
 import { ServicesProps } from "../../controllers/ServicesController";
 
+export type TypeItem = "Phone" | "Client" | "Order" | "Service" | "None";
+export type TypeData =
+  | ClientsProps
+  | PhonesProps
+  | OrdersProps
+  | ServicesProps
+  | null;
 export type ActiveTabsProps =
   | "Home"
-  | "ShowAllClients"
-  | "ClientRegistration"
-  | "ClientEdit"
-  | "ClientDetails"
-  | "ShowAllPhones"
-  | "PhoneRegistration"
-  | "PhoneEdit"
-  | "PhoneDetails"
-  | "ShowAllServices"
-  | "ServiceRegistration"
-  | "ServiceEdit"
-  | "ServiceDetails"
-  | "ShowAllOrders"
-  | "orderRegistration"
-  | "OrderEdit"
-  | "OrderDetails"
+  | "Registration"
+  | "Edit"
+  | "ListItems"
   | "LoadLists";
 
 export interface AppState {
@@ -29,18 +23,27 @@ export interface AppState {
   phones: Array<PhonesProps>;
   orders: Array<OrdersProps>;
   services: Array<ServicesProps>;
+  currentType: TypeItem;
   isLoading: boolean;
   focusId: string;
   activeTab: ActiveTabsProps;
+  currentData: TypeData;
 }
-
 const initialState: AppState = {
   isLoading: false,
   focusId: "",
   activeTab: "Home",
+  currentType: "None",
+  currentData: null,
   orders: [
     {
       id: 0,
+      name: "",
+      cpf: "",
+      email: "",
+      idClient: "",
+      idPhone: 0,
+      phoneModel: "",
     },
   ],
   phones: [
@@ -91,6 +94,12 @@ const AppSlice = createSlice({
     setServices: (state, action: PayloadAction<ServicesProps[]>) => {
       state.services = action.payload;
     },
+    setCurrentItem: (state, action: PayloadAction<TypeData>) => {
+      state.currentData = action.payload;
+    },
+    setCurrentType: (state, action: PayloadAction<TypeItem>) => {
+      state.currentType = action.payload;
+    },
   },
 });
 
@@ -103,4 +112,6 @@ export const {
   setOrders,
   setPhones,
   setServices,
+  setCurrentItem,
+  setCurrentType,
 } = AppSlice.actions;

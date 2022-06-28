@@ -8,6 +8,7 @@ interface SelectInputProps {
   onChange: (newValue: string[]) => void;
   multiple: boolean;
   itemsData: Array<string>;
+  disabled?: boolean;
 }
 const SelectInput = ({
   label,
@@ -15,6 +16,7 @@ const SelectInput = ({
   value,
   itemsData,
   multiple,
+  disabled,
 }: SelectInputProps) => {
   const [items, setItems] = useState<Array<string>>([]);
   const [db, setDb] = useState<Array<string>>([]);
@@ -38,28 +40,28 @@ const SelectInput = ({
       let flag = false;
       value.forEach((v) => {
         if (filteredItem == v) {
-          items.push(filteredItem);
+          // items.push(filteredItem);
           flag = true;
         }
       });
       return !flag;
     });
     setDb(newDb);
-  }, []);
+  }, [value]);
 
   useEffect(() => {
     init();
   }, [init]);
 
-  // useEffect(() => {
-  //   console.log("AA", value);
-  // }, [value]);
-
   useEffect(() => {
-    if (multiple) {
-      onChange([]);
-    }
-  }, [items]);
+    setItems(value);
+  }, [value]);
+
+  // useEffect(() => {
+  //   if (multiple) {
+  //     onChange([]);
+  //   }
+  // }, [items]);
   return (
     <Box marginBottom={"15px"}>
       <Heading marginBottom={"10px"} color={"#6D676E"} size={"sm"}>
@@ -80,20 +82,23 @@ const SelectInput = ({
               flexWrap="wrap"
             >
               <Text>{s}</Text>
-              <Box
-                marginX={"10px"}
-                cursor={"pointer"}
-                _hover={{ opacity: 0.5 }}
-                onClick={() => handleDeleteService(s)}
-              >
-                <MdOutlineDelete color="#ff0000" size={20} />
-              </Box>
+              {!disabled && (
+                <Box
+                  marginX={"10px"}
+                  cursor={"pointer"}
+                  _hover={{ opacity: 0.5 }}
+                  onClick={() => handleDeleteService(s)}
+                >
+                  <MdOutlineDelete color="#ff0000" size={20} />
+                </Box>
+              )}
             </Flex>
           );
         })}
       </Flex>
 
       <Select
+        disabled={disabled}
         onChange={(e) => {
           if (items.length === 0 || multiple) {
             const selection = e.target.options[e.target.selectedIndex].value;

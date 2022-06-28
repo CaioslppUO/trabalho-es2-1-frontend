@@ -1,11 +1,10 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ClientsController,
   ClientsProps,
 } from "../../controllers/ClientsController";
 import {
-  OrderRegistryProps,
   OrdersController,
   OrdersProps,
 } from "../../controllers/OrdersController";
@@ -29,12 +28,9 @@ import {
 import { useToast } from "@chakra-ui/react";
 import SelectInput from "../inputs/SelectInput";
 import TextInput from "../inputs/TextInput";
+import { RegistryError } from "../../types/RegistryError";
 
-interface ItemRegistration {
-  typeItem: "Phone" | "Client" | "Order" | "Service";
-}
-
-export default function ItemRegistration({ typeItem }: ItemRegistration) {
+export default function ItemRegistration() {
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [price, setPrice] = useState("");
@@ -44,180 +40,219 @@ export default function ItemRegistration({ typeItem }: ItemRegistration) {
   const [orderPhone, setOrderPhone] = useState<string[]>([]);
   const [orderClient, setOrderClient] = useState<string[]>([]);
   const [orderServices, setOrderServices] = useState<string[]>([]);
+  const [edit, setEdit] = useState(false);
 
   const toast = useToast();
   const dispatch = useAppDispatch();
-  const { clients, services, phones } = useAppSelector((s) => s.app);
+  const { clients, services, phones, currentData, currentType } =
+    useAppSelector((s) => s.app);
 
-  function showRegistryError() {
+  function showRegistryError(type: "inputs" | "fetch") {
     toast({
-      title: "Erro ao cadastrar!",
+      title: type === "inputs" ? "Dados incorretos!" : "Erro ao cadastrar!",
       status: "error",
       duration: 3000,
       isClosable: true,
     });
   }
 
-  async function registryClient() {
-    const clientController = new ClientsController();
-    const newClient: ClientsProps = {
-      cpf,
-      name,
-      email,
-      id: -1,
-    };
-    const clients = await clientController.RegistryNewClient(newClient);
+  function showRegistrySucess() {
+    const type =
+      currentType === "Client"
+        ? "Client"
+        : currentType === "Phone"
+        ? "Celular"
+        : currentType === "Service"
+        ? "Serviço"
+        : "Ordem de Serviço";
 
-    if (clients !== -1) {
-      dispatch(setClients(clients));
-
-      toast({
-        title: "Cliente registrado!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      showRegistryError();
-    }
+    toast({
+      title: `${type} registrado!`,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
   }
 
-  async function registryOrder() {
-    const now = new Date();
-    const newOrder: OrderRegistryProps = {
-      idClient: parseInt(
-        orderClient[0].replace(/\s/g, "").split("/")[0].split(":")[1]
-      ),
-      idPhone: parseInt(
-        orderPhone[0].replace(/\s/g, "").split("/")[0].split(":")[1]
-      ),
-      services: orderServices.map((i) =>
-        parseInt(i.replace(/\s/g, "").split("/")[0].split(":")[1])
-      ),
-      beginDate: `${now.getFullYear()}-${now.getUTCMonth()}-${now.getUTCDate()}`,
-    };
-
-    const oc = new OrdersController();
-    const orders = await oc.RegistryNewOrder(newOrder);
-
-    if (orders !== -1) {
-      dispatch(setOrders(orders));
-      toast({
-        title: "Ordem de Serviços cadastrada!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      showRegistryError();
-    }
+  function getOrderClientId() {
+    return orderClient.length === 1
+      ? parseInt(orderClient[0].replace(/\s/g, "").split("/")[0].split(":")[1])
+      : -1;
   }
 
-  async function registryPhone() {
-    const pc = new PhonesController();
-    const newPhone: PhonesProps = {
-      id: -1,
-      model,
-    };
-    const phones = await pc.RegistryNewPhone(newPhone);
-
-    if (phones !== -1) {
-      dispatch(setPhones(phones));
-
-      toast({
-        title: "Celular cadastrado!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      showRegistryError();
-    }
+  function getOrderPhoneId() {
+    return orderPhone.length === 1
+      ? parseInt(orderPhone[0].replace(/\s/g, "").split("/")[0].split(":")[1])
+      : -1;
   }
 
-  async function registryService() {
-    const sc = new ServicesController();
-    const newService: ServicesProps = {
-      id: -1,
-      price: parseFloat(price),
-      type,
-    };
-    const services = await sc.RegistryNewService(newService);
-
-    if (services !== -1) {
-      dispatch(setServices(services));
-
-      toast({
-        title: "Serviço cadastrado!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      showRegistryError();
-    }
+  function getOrderServices() {
+    return orderServices.map((i) =>
+      parseInt(i.replace(/\s/g, "").split("/")[0].split(":")[1])
+    );
   }
+
   async function handleRegistry() {
     dispatch(setLoading(true));
-    if (
-      typeItem === "Client" &&
-      cpf.length > 10 &&
-      name.length > 3 &&
-      email.length > 3
-    ) {
-      await registryClient();
-    } else if (
-      typeItem === "Order" &&
-      orderClient.length === 1 &&
-      orderServices.length > 0 &&
-      orderPhone.length === 1
-    ) {
-      await registryOrder();
-    } else if (typeItem === "Phone" && model.length > 1) {
-      await registryPhone();
-    } else if (typeItem === "Service" && price.length > 0 && type.length > 2) {
-      await registryService();
-    } else {
-      toast({
-        title: "Dados incorretos",
-        description: "Verifique o preenchimento dos dados.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+    let data;
+
+    switch (currentType) {
+      case "Client":
+        data = await new ClientsController().updateClient(
+          name,
+          cpf,
+          email,
+          currentData?.id || -1
+        );
+        if (data !== "fetchError" && data !== "inputsError") {
+          dispatch(setClients(data));
+        }
+        break;
+      case "Order":
+        data = await new OrdersController().updateOrder(
+          getOrderClientId(),
+          getOrderPhoneId(),
+          getOrderServices(),
+          currentData?.id || -1
+        );
+        if (data !== "fetchError" && data !== "inputsError") {
+          dispatch(setOrders(data));
+        }
+        break;
+      case "Phone":
+        data = await new PhonesController().updatePhone(
+          model,
+          currentData?.id || -1
+        );
+        if (data !== "fetchError" && data !== "inputsError") {
+          dispatch(setPhones(data));
+        }
+        break;
+      case "Service":
+        data = await new ServicesController().updateService(
+          parseFloat(price),
+          type,
+          currentData?.id || -1
+        );
+        if (data !== "fetchError" && data !== "inputsError") {
+          dispatch(setServices(data));
+        }
+        break;
+      default:
+        data = "inputsError" as RegistryError;
+        break;
     }
 
-    dispatch(setActiveTab("Home"));
-
     dispatch(setLoading(false));
+
+    if (data === "fetchError") {
+      showRegistryError("fetch");
+    } else if (data === "inputsError") {
+      showRegistryError("inputs");
+    } else {
+      showRegistrySucess();
+      dispatch(setActiveTab("ListItems"));
+    }
   }
+
+  function initOrder() {
+    const data = currentData as OrdersProps;
+    setOrderPhone([`ID:${data.idPhone} / ${data.phoneModel}`]);
+    setOrderClient([`ID:${data.idClient} / NOME: ${data.name}`]);
+    setOrderServices(
+      data.services
+        ? data.services.map((i) => `ID:${i.id} / ${i.type} / R$${i.price}`)
+        : []
+    );
+  }
+
+  function initClient() {
+    const data = currentData as ClientsProps;
+    setName(data.name);
+    setEmail(data.email);
+    setCpf(data.cpf);
+  }
+
+  function initPhone() {
+    const data = currentData as PhonesProps;
+    setModel(data.model);
+  }
+  function initService() {
+    const data = currentData as ServicesProps;
+    setType(data.type);
+    setPrice(data.price.toString());
+  }
+
+  useEffect(() => {
+    switch (currentType) {
+      case "Client":
+        initClient();
+        break;
+      case "Order":
+        initOrder();
+        break;
+      case "Phone":
+        initPhone();
+        break;
+      case "Service":
+        initService();
+        break;
+    }
+  }, [currentType, currentData]);
+
   return (
     <>
       <Heading marginBottom={"30px"} color={"#6D676E"} size={"lg"}>
-        {typeItem === "Client" && "Cadastro Cliente"}
-        {typeItem === "Phone" && "Cadastro de Celular"}
-        {typeItem === "Order" && "Cadastro Ordem de Serviços"}
-        {typeItem === "Service" && "Cadastro de Serviço"}
+        {currentType === "Client" && "Edição Cliente"}
+        {currentType === "Phone" && "Edição de Celular"}
+        {currentType === "Order" && "Edição Ordem de Serviços"}
+        {currentType === "Service" && "Edição de Serviço"}
       </Heading>
 
-      {typeItem === "Client" && (
+      {currentType === "Client" && (
         <>
-          <TextInput label="Nome" value={name} onChange={setName} />
-          <TextInput label="Email" value={email} onChange={setEmail} />
-          <TextInput label="CPF" value={cpf} onChange={setCpf} />
-        </>
-      )}
-
-      {typeItem === "Phone" && (
-        <>
-          <TextInput label="Modelo" value={model} onChange={setModel} />
-        </>
-      )}
-
-      {typeItem === "Service" && (
-        <>
-          <TextInput label="Tipo" value={type} onChange={setType} />
           <TextInput
+            disabled={!edit}
+            label="Nome"
+            value={name}
+            onChange={setName}
+          />
+          <TextInput
+            disabled={!edit}
+            label="Email"
+            value={email}
+            onChange={setEmail}
+          />
+          <TextInput
+            disabled={!edit}
+            label="CPF"
+            value={cpf}
+            onChange={setCpf}
+          />
+        </>
+      )}
+
+      {currentType === "Phone" && (
+        <>
+          <TextInput
+            disabled={!edit}
+            label="Modelo"
+            value={model}
+            onChange={setModel}
+          />
+        </>
+      )}
+
+      {currentType === "Service" && (
+        <>
+          <TextInput
+            disabled={!edit}
+            label="Tipo"
+            value={type}
+            onChange={setType}
+          />
+          <TextInput
+            disabled={!edit}
             label="Preço"
             type={"number"}
             value={price}
@@ -226,7 +261,7 @@ export default function ItemRegistration({ typeItem }: ItemRegistration) {
         </>
       )}
 
-      {typeItem === "Order" && (
+      {currentType === "Order" && (
         <>
           <SelectInput
             label="Celular"
@@ -234,9 +269,11 @@ export default function ItemRegistration({ typeItem }: ItemRegistration) {
             value={orderPhone}
             multiple={false}
             itemsData={phones.map((i) => `ID:${i.id} / ${i.model}`)}
+            disabled={!edit}
           />
 
           <SelectInput
+            disabled={!edit}
             label="Cliente"
             onChange={(e) => setOrderClient(e)}
             value={orderClient}
@@ -245,9 +282,10 @@ export default function ItemRegistration({ typeItem }: ItemRegistration) {
           />
 
           <SelectInput
+            disabled={!edit}
             label="Serviços"
             onChange={(e) => setOrderServices(e)}
-            value={[]}
+            value={orderServices}
             multiple
             itemsData={services.map(
               (i) => `ID:${i.id} / ${i.type} / R$${i.price}`
@@ -259,12 +297,15 @@ export default function ItemRegistration({ typeItem }: ItemRegistration) {
       <Flex gap="30px" marginTop="30px">
         <Button
           colorScheme={"blackAlpha"}
-          onClick={() => dispatch(setActiveTab("Home"))}
+          onClick={() => dispatch(setActiveTab("ListItems"))}
         >
           Cancelar
         </Button>
-        <Button onClick={handleRegistry} colorScheme={"whatsapp"}>
-          Finalizar
+        <Button
+          onClick={edit ? handleRegistry : () => setEdit(true)}
+          colorScheme={"whatsapp"}
+        >
+          {edit ? "Finalizar" : "Editar"}
         </Button>
       </Flex>
     </>

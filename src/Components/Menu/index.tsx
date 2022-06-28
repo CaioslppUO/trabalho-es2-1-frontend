@@ -1,13 +1,19 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import { MdPermDeviceInformation } from "react-icons/md";
 import { useAppDispatch } from "../../store/hooks";
-import { ActiveTabsProps, setActiveTab } from "../../store/reducers/appReducer";
+import {
+  ActiveTabsProps,
+  setActiveTab,
+  setCurrentType,
+  TypeItem,
+} from "../../store/reducers/appReducer";
 import MenuSection from "./MenuSection";
 
 export default function Menu() {
   const dispatch = useAppDispatch();
-  function ChangeScreen(value: ActiveTabsProps) {
-    dispatch(setActiveTab(value));
+  function changeScreen(value: TypeItem, tab: ActiveTabsProps) {
+    dispatch(setCurrentType(value));
+    dispatch(setActiveTab(tab));
   }
   return (
     <Flex
@@ -34,31 +40,31 @@ export default function Menu() {
       <Flex flexDirection={"column"} w="100%">
         <MenuSection
           sectionTitle="Home"
-          homeAction={() => ChangeScreen("Home")}
+          homeAction={() => changeScreen("None", "Home")}
         />
         <MenuSection
           sectionTitle="Clientes"
-          registrationAction={() => ChangeScreen("ClientRegistration")}
-          seeAllAction={() => ChangeScreen("ShowAllClients")}
+          registrationAction={() => changeScreen("Client", "Registration")}
+          seeAllAction={() => changeScreen("Client", "ListItems")}
         />
         <MenuSection
           sectionTitle="Celulares"
-          registrationAction={() => ChangeScreen("PhoneRegistration")}
-          seeAllAction={() => ChangeScreen("ShowAllPhones")}
+          registrationAction={() => changeScreen("Phone", "Registration")}
+          seeAllAction={() => changeScreen("Phone", "ListItems")}
         />
         <MenuSection
           sectionTitle="Serviços"
-          registrationAction={() => ChangeScreen("ServiceRegistration")}
-          seeAllAction={() => ChangeScreen("ShowAllServices")}
+          registrationAction={() => changeScreen("Service", "Registration")}
+          seeAllAction={() => changeScreen("Service", "ListItems")}
         />
         <MenuSection
           sectionTitle="Ordens de Serviços"
-          registrationAction={() => ChangeScreen("orderRegistration")}
-          seeAllAction={() => ChangeScreen("ShowAllOrders")}
+          registrationAction={() => changeScreen("Order", "Registration")}
+          seeAllAction={() => changeScreen("Order", "ListItems")}
         />
         <MenuSection
           sectionTitle="Carregar Listas de Informação"
-          loadFilesAction={() => ChangeScreen("LoadLists")}
+          loadFilesAction={() => changeScreen("None", "LoadLists")}
         />
       </Flex>
     </Flex>

@@ -18,10 +18,10 @@ import {
   setPhones,
   setServices,
 } from "./store/reducers/appReducer";
+import ItemEdit from "./Components/ItemEdit/ItemEdit";
 
 export default function Home() {
-  const { isLoading, activeTab, clients, orders, services, phones } =
-    useAppSelector((s) => s.app);
+  const { isLoading, activeTab } = useAppSelector((s) => s.app);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -40,31 +40,13 @@ export default function Home() {
       <Menu />
       <Flex padding={"15px"} flexDirection={"column"} w="100%">
         {activeTab === "Home" && <Homepage />}
-        {activeTab === "ShowAllClients" && (
-          <ListItems title="Clientes Registrados" clients={clients} />
-        )}
-        {activeTab === "ShowAllOrders" && (
-          <ListItems title="Ordens Registrados" orders={orders} />
-        )}
-        {activeTab === "ShowAllPhones" && (
-          <ListItems title="Celulares Registrados" phones={phones} />
-        )}
-        {activeTab === "ShowAllServices" && (
-          <ListItems title="Serviços Registrados" services={services} />
-        )}
-        {activeTab === "ClientRegistration" && (
-          <ItemRegistration typeItem="Client" />
-        )}
-        {activeTab === "orderRegistration" && (
-          <ItemRegistration typeItem="Order" />
-        )}
-        {activeTab === "PhoneRegistration" && (
-          <ItemRegistration typeItem="Phone" />
-        )}
-        {activeTab === "ServiceRegistration" && (
-          <ItemRegistration typeItem="Service" />
-        )}
+        {activeTab === "ListItems" && <ListItems />}
+
+        {activeTab === "Registration" && <ItemRegistration />}
+
         {activeTab === "LoadLists" && <LoadLists />}
+
+        {activeTab === "Edit" && <ItemEdit />}
       </Flex>
     </Flex>
   );

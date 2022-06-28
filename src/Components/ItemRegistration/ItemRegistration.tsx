@@ -1,22 +1,9 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
 import { useState } from "react";
-import {
-  ClientsController,
-  ClientsProps,
-} from "../../controllers/ClientsController";
-import {
-  OrderRegistryProps,
-  OrdersController,
-  OrdersProps,
-} from "../../controllers/OrdersController";
-import {
-  PhonesController,
-  PhonesProps,
-} from "../../controllers/PhonesController";
-import {
-  ServicesController,
-  ServicesProps,
-} from "../../controllers/ServicesController";
+import { ClientsController } from "../../controllers/ClientsController";
+import { OrdersController } from "../../controllers/OrdersController";
+import { PhonesController } from "../../controllers/PhonesController";
+import { ServicesController } from "../../controllers/ServicesController";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   setActiveTab,
@@ -29,16 +16,9 @@ import {
 import { useToast } from "@chakra-ui/react";
 import SelectInput from "../inputs/SelectInput";
 import TextInput from "../inputs/TextInput";
+import { RegistryError } from "../../types/RegistryError";
 
-interface ItemEditProps {
-  typeItem: "Phone" | "Client" | "Order" | "Service";
-  operation?: "Edit" | "Registry";
-}
-
-export default function ItemEdit({
-  typeItem,
-  operation = "Registry",
-}: ItemEditProps) {
+export default function ItemEdit() {
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [price, setPrice] = useState("");
@@ -51,161 +31,123 @@ export default function ItemEdit({
 
   const toast = useToast();
   const dispatch = useAppDispatch();
-  const { clients, services, phones } = useAppSelector((s) => s.app);
+  const { clients, services, phones, currentData, currentType } =
+    useAppSelector((s) => s.app);
 
-  function showRegistryError() {
+  function showRegistryError(type: "inputs" | "fetch") {
     toast({
-      title: "Erro ao cadastrar!",
+      title: type === "inputs" ? "Dados incorretos!" : "Erro ao cadastrar!",
       status: "error",
       duration: 3000,
       isClosable: true,
     });
   }
 
-  async function registryClient() {
-    const clientController = new ClientsController();
-    const newClient: ClientsProps = {
-      cpf,
-      name,
-      email,
-      id: -1,
-    };
-    const clients = await clientController.RegistryNewClient(newClient);
+  function showRegistrySucess() {
+    const type =
+      currentType === "Client"
+        ? "Client"
+        : currentType === "Phone"
+        ? "Celular"
+        : currentType === "Service"
+        ? "Serviço"
+        : "Ordem de Serviço";
 
-    if (clients !== -1) {
-      dispatch(setClients(clients));
-
-      toast({
-        title: "Cliente registrado!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      showRegistryError();
-    }
+    toast({
+      title: `${type} registrado!`,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
   }
 
-  async function registryOrder() {
-    const now = new Date();
-    const newOrder: OrderRegistryProps = {
-      idClient: parseInt(
-        orderClient[0].replace(/\s/g, "").split("/")[0].split(":")[1]
-      ),
-      idPhone: parseInt(
-        orderPhone[0].replace(/\s/g, "").split("/")[0].split(":")[1]
-      ),
-      services: orderServices.map((i) =>
-        parseInt(i.replace(/\s/g, "").split("/")[0].split(":")[1])
-      ),
-      beginDate: `${now.getFullYear()}-${now.getUTCMonth()}-${now.getUTCDate()}`,
-    };
-
-    const oc = new OrdersController();
-    const orders = await oc.RegistryNewOrder(newOrder);
-
-    if (orders !== -1) {
-      dispatch(setOrders(orders));
-      toast({
-        title: "Ordem de Serviços cadastrada!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      showRegistryError();
-    }
+  function getOrderClientId() {
+    return orderClient.length === 1
+      ? parseInt(orderClient[0].replace(/\s/g, "").split("/")[0].split(":")[1])
+      : -1;
   }
 
-  async function registryPhone() {
-    const pc = new PhonesController();
-    const newPhone: PhonesProps = {
-      id: -1,
-      model,
-    };
-    const phones = await pc.RegistryNewPhone(newPhone);
-
-    if (phones !== -1) {
-      dispatch(setPhones(phones));
-
-      toast({
-        title: "Celular cadastrado!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      showRegistryError();
-    }
+  function getOrderPhoneId() {
+    return orderPhone.length === 1
+      ? parseInt(orderPhone[0].replace(/\s/g, "").split("/")[0].split(":")[1])
+      : -1;
   }
 
-  async function registryService() {
-    const sc = new ServicesController();
-    const newService: ServicesProps = {
-      id: -1,
-      price: parseFloat(price),
-      type,
-    };
-    const services = await sc.RegistryNewService(newService);
-
-    if (services !== -1) {
-      dispatch(setServices(services));
-
-      toast({
-        title: "Serviço cadastrado!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      showRegistryError();
-    }
+  function getOrderServices() {
+    return orderServices.map((i) =>
+      parseInt(i.replace(/\s/g, "").split("/")[0].split(":")[1])
+    );
   }
+
   async function handleRegistry() {
     dispatch(setLoading(true));
-    if (
-      typeItem === "Client" &&
-      cpf.length > 10 &&
-      name.length > 3 &&
-      email.length > 3
-    ) {
-      await registryClient();
-    } else if (
-      typeItem === "Order" &&
-      orderClient.length === 1 &&
-      orderServices.length > 0 &&
-      orderPhone.length === 1
-    ) {
-      await registryOrder();
-    } else if (typeItem === "Phone" && model.length > 1) {
-      await registryPhone();
-    } else if (typeItem === "Service" && price.length > 0 && type.length > 2) {
-      await registryService();
-    } else {
-      toast({
-        title: "Dados incorretos",
-        description: "Verifique o preenchimento dos dados.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+    let data;
+
+    switch (currentType) {
+      case "Client":
+        data = await new ClientsController().RegistryNewClient(
+          name,
+          cpf,
+          email
+        );
+        console.log("AAA", data);
+        if (data !== "fetchError" && data !== "inputsError") {
+          dispatch(setClients(data));
+        }
+        break;
+      case "Order":
+        data = await new OrdersController().RegistryNewOrder(
+          getOrderClientId(),
+          getOrderPhoneId(),
+          getOrderServices()
+        );
+        if (data !== "fetchError" && data !== "inputsError") {
+          dispatch(setOrders(data));
+        }
+        break;
+      case "Phone":
+        data = await new PhonesController().RegistryNewPhone(model);
+        if (data !== "fetchError" && data !== "inputsError") {
+          dispatch(setPhones(data));
+        }
+        break;
+      case "Service":
+        data = await new ServicesController().RegistryNewService(
+          parseFloat(price),
+          type
+        );
+        if (data !== "fetchError" && data !== "inputsError") {
+          dispatch(setServices(data));
+        }
+        break;
+      default:
+        data = "inputsError" as RegistryError;
+        break;
     }
 
-    dispatch(setActiveTab("Home"));
-
     dispatch(setLoading(false));
+
+    if (data === "fetchError") {
+      showRegistryError("fetch");
+    } else if (data === "inputsError") {
+      showRegistryError("inputs");
+    } else {
+      showRegistrySucess();
+      dispatch(setActiveTab("ListItems"));
+    }
   }
+
   return (
     <>
       <Heading marginBottom={"30px"} color={"#6D676E"} size={"lg"}>
-        {operation === "Registry" ? "Cadastro" : "Edição"}
-        {typeItem === "Client" && " de Cliente"}
-        {typeItem === "Phone" && " de Celular"}
-        {typeItem === "Order" && "de Ordem de Serviços"}
-        {typeItem === "Service" && " de Serviço"}
+        Cadastro
+        {currentType === "Client" && " de Cliente"}
+        {currentType === "Phone" && " de Celular"}
+        {currentType === "Order" && "de Ordem de Serviços"}
+        {currentType === "Service" && " de Serviço"}
       </Heading>
 
-      {typeItem === "Client" && (
+      {currentType === "Client" && (
         <>
           <TextInput label="Nome" value={name} onChange={setName} />
           <TextInput label="Email" value={email} onChange={setEmail} />
@@ -213,13 +155,13 @@ export default function ItemEdit({
         </>
       )}
 
-      {typeItem === "Phone" && (
+      {currentType === "Phone" && (
         <>
           <TextInput label="Modelo" value={model} onChange={setModel} />
         </>
       )}
 
-      {typeItem === "Service" && (
+      {currentType === "Service" && (
         <>
           <TextInput label="Tipo" value={type} onChange={setType} />
           <TextInput
@@ -231,7 +173,7 @@ export default function ItemEdit({
         </>
       )}
 
-      {typeItem === "Order" && (
+      {currentType === "Order" && (
         <>
           <SelectInput
             label="Celular"
@@ -252,7 +194,7 @@ export default function ItemEdit({
           <SelectInput
             label="Serviços"
             onChange={(e) => setOrderServices(e)}
-            value={[]}
+            value={orderServices}
             multiple
             itemsData={services.map(
               (i) => `ID:${i.id} / ${i.type} / R$${i.price}`
