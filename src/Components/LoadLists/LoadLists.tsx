@@ -17,6 +17,16 @@ export default function LoadLists() {
   const dispacth = useAppDispatch();
   const toast = useToast();
   async function handleSend() {
+    if (!phoneFile && !servicesFile) {
+      toast({
+        title: "Nenhum arquivo selecionado!",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     dispacth(setLoading(true));
     const formData = new FormData();
     if (phoneFile) {

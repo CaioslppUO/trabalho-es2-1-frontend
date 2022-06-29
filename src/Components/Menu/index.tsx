@@ -66,6 +66,13 @@ export default function Menu() {
           sectionTitle="Carregar Listas de Informação"
           loadFilesAction={() => changeScreen("None", "LoadLists")}
         />
+        <MenuSection
+          sectionTitle="Dados Estatísticos"
+          chartsTitle="Gráficos de Acompanhamento"
+          chartsAction={() => changeScreen("None", "ServicesCharts")}
+          servicesChartsTitle="Acompanhamento por período"
+          servicesChartsAction={() => changeScreen("None", "Charts")}
+        />
       </Flex>
     </Flex>
   );

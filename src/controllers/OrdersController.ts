@@ -10,6 +10,7 @@ export interface OrdersProps {
   idPhone: number;
   phoneModel: string;
   services?: { type: string; price: string; id: number }[];
+  beginDate?: string;
 }
 export interface OrderRegistryProps {
   idClient: number;
@@ -52,7 +53,7 @@ export class OrdersController {
           idClient,
           idPhone,
           services,
-        } as OrderRegistryProps);
+        });
       } catch (error) {
         console.log(error);
         return "fetchError";
@@ -76,15 +77,17 @@ export class OrdersController {
     idClient: number,
     idPhone: number,
     services: number[],
-    orderId: number
+    orderId: number,
+    beginDate: string
   ): Promise<RegistryError | OrdersProps[]> {
     if (idClient >= 0 && idPhone >= 0 && services.length > 0) {
       try {
         await api.put("serviceOrder", {
           idClient,
           idPhone,
-          services,
           id: orderId,
+          idsService: services,
+          beginDate,
         });
       } catch (error) {
         console.log(error);

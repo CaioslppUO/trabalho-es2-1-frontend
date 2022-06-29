@@ -12,13 +12,22 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@reduxjs/toolkit": "^1.8.2",
+    "@types/react-datepicker": "^4.4.2",
+    "@types/react-vis": "^1.11.11",
+    "add": "^2.0.6",
     "axios": "^0.27.2",
+    "chart.js": "^3.8.0",
+    "faker": "^6.6.6",
     "framer-motion": "^6",
     "react": "^18.0.0",
+    "react-chartjs-2": "^4.2.0",
+    "react-datepicker": "^4.8.0",
     "react-dom": "^18.0.0",
     "react-hot-toast": "^2.2.0",
     "react-icons": "^4.4.0",
-    "react-redux": "^8.0.2"
+    "react-redux": "^8.0.2",
+    "react-vis": "^1.11.7",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

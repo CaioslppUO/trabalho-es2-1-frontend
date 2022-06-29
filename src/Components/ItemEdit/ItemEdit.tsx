@@ -113,7 +113,8 @@ export default function ItemRegistration() {
           getOrderClientId(),
           getOrderPhoneId(),
           getOrderServices(),
-          currentData?.id || -1
+          currentData?.id || -1,
+          (currentData as OrdersProps).beginDate || ""
         );
         if (data !== "fetchError" && data !== "inputsError") {
           dispatch(setOrders(data));

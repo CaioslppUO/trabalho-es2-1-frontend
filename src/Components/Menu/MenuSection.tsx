@@ -10,6 +10,10 @@ interface MenuSectionProps {
   loadFilesTitle?: string;
   homeAction?: () => void;
   homeTitle?: string;
+  chartsAction?: () => void;
+  chartsTitle?: string;
+  servicesChartsAction?: () => void;
+  servicesChartsTitle?: string;
 }
 
 export default function MenuSection({
@@ -22,6 +26,10 @@ export default function MenuSection({
   loadFilesAction,
   homeAction,
   homeTitle = "Home",
+  chartsAction,
+  chartsTitle,
+  servicesChartsAction,
+  servicesChartsTitle,
 }: MenuSectionProps) {
   return (
     <>
@@ -84,6 +92,32 @@ export default function MenuSection({
           fontSize={"13px"}
         >
           {homeTitle}
+        </Button>
+      )}
+      {chartsAction && (
+        <Button
+          display={"flex"}
+          justifyContent="flex-start"
+          borderRadius="none"
+          background={"#d4d4d45e"}
+          marginBottom="1px"
+          onClick={chartsAction}
+          fontSize={"13px"}
+        >
+          {chartsTitle}
+        </Button>
+      )}
+      {servicesChartsAction && (
+        <Button
+          display={"flex"}
+          justifyContent="flex-start"
+          borderRadius="none"
+          background={"#d4d4d45e"}
+          marginBottom="1px"
+          onClick={servicesChartsAction}
+          fontSize={"13px"}
+        >
+          {servicesChartsTitle}
         </Button>
       )}
     </>

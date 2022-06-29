@@ -16,7 +16,9 @@ export type ActiveTabsProps =
   | "Registration"
   | "Edit"
   | "ListItems"
-  | "LoadLists";
+  | "LoadLists"
+  | "ServicesCharts"
+  | "Charts";
 
 export interface AppState {
   clients: Array<ClientsProps>;

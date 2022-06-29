@@ -19,6 +19,8 @@ import {
   setServices,
 } from "./store/reducers/appReducer";
 import ItemEdit from "./Components/ItemEdit/ItemEdit";
+import Charts from "./Components/charts/Charts";
+import ServicesCharts from "./Components/charts/ServicesChats";
 
 export default function Home() {
   const { isLoading, activeTab } = useAppSelector((s) => s.app);
@@ -47,6 +49,9 @@ export default function Home() {
         {activeTab === "LoadLists" && <LoadLists />}
 
         {activeTab === "Edit" && <ItemEdit />}
+
+        {activeTab === "Charts" && <Charts />}
+        {activeTab === "ServicesCharts" && <ServicesCharts />}
       </Flex>
     </Flex>
   );
